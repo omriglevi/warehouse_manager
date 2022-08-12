@@ -42,6 +42,7 @@ public class EmployeeController {
         MessageResponse updateEmployee = productService.updateProduct(id, product);
         return new ResponseEntity<>(updateEmployee, HttpStatus.OK);
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Integer id) {
         productService.deleteProduct(id);
