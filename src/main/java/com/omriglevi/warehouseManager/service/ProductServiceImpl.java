@@ -5,6 +5,8 @@ import com.omriglevi.warehouseManager.data.payloads.request.ProductRequest;
 import com.omriglevi.warehouseManager.data.payloads.response.MessageResponse;
 import com.omriglevi.warehouseManager.data.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
         newProduct.setPrice( productRequest.getPrice());
         newProduct.setQtyInStock( productRequest.getQtyInStock());
         System.out.println(newProduct + "!!!-------------!!!");
-        productRepository.save((Product) newProduct);
+        productRepository.save(newProduct);
         return new MessageResponse("New Product added successfully") ;
 
 
@@ -65,4 +67,34 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
+    @Override
+    public List<Product> getByMinMaxPrice(int min , int max) {
+        return  productRepository.findAllProductByMinMax(min, max);
+    }
+
+    @Override
+    public List<Product> getOutOfStockProducts() {
+        return productRepository.findOutOfStockProducts();
+    }
+
+    @Override
+    public List<Product> searchProductsByName(String name) {
+
+        Product product = new Product() ;
+        product.setName(name);
+
+        ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+        Example<Product> example = Example.of(product , customExampleMatcher);
+        return productRepository.findAll(example);
+    }
+
+    @Override
+    public List<Product> searchByBrandAndCategory(String category, String brand) {
+        return productRepository.findByCategoryAndBrand(category,brand);
+    }
+
+
 }

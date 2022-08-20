@@ -10,14 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-public class EmployeeController {
+public class ProductController {
     @Autowired
     ProductService productService ;
-
 
     @GetMapping("/all")
     public ResponseEntity<List<Product>> getAllProducts (){
@@ -30,6 +28,39 @@ public class EmployeeController {
         Product product = productService.getASingleProduct(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+
+    @GetMapping("/find/minmax")
+    public  ResponseEntity<List<Product>> getAllProdByMinMaxPrice(@RequestParam(required = false) String min, @RequestParam(required = false) String max){
+        if(min == null){
+            min = "1";
+        }
+        if(max == null){
+            max = "9999" ;
+        }
+        List<Product> products = productService.getByMinMaxPrice(Integer.parseInt(min), Integer.parseInt(max));
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/outofstock")
+    public  ResponseEntity<List<Product>> getAllOutOfStockProducts(){
+
+        List<Product> products = productService.getOutOfStockProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/byname")
+    public  ResponseEntity<List<Product>> searchProductsByName(@RequestParam String name){
+        List<Product> products = productService.searchProductsByName(name);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/find/categoryandbrand")
+    public  ResponseEntity<List<Product>> searchProductsByName(@RequestParam String category, @RequestParam String brand){
+        List<Product> products = productService.searchByBrandAndCategory(category, brand);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<MessageResponse> addProduct (@RequestBody ProductRequest product){

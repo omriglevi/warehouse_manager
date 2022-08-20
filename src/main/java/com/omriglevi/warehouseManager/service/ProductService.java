@@ -6,7 +6,6 @@ import com.omriglevi.warehouseManager.data.payloads.response.MessageResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public interface ProductService {
@@ -15,5 +14,10 @@ public interface ProductService {
     void deleteProduct(Integer productId);
     Product getASingleProduct(Integer productId) throws Exception;
     List <Product> getAllProducts();
+    List<Product> getByMinMaxPrice(int min, int max);
+    List<Product> getOutOfStockProducts();
+    List<Product> searchProductsByName(String name);
+    List<Product> searchByBrandAndCategory(String category, String brand);
 
-    }
+
+}
